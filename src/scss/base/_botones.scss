@@ -1,0 +1,14 @@
+.boton-amarillo {
+    @include boton($amarillo, inline-block);
+    font-size: 2rem;
+}
+
+.boton-amarillo-block {
+    @include boton($amarillo, block);
+    font-size: 2rem;
+}
+
+.boton-verde {
+    @include boton($verde, inline);
+    font-size: 2rem;
+}
