@@ -28,4 +28,7 @@
                 </div>
             </div>
         </div> <!--Cierre de barra-->
+        <div class="<?php echo $titulo ? 'titulo' : "none" ?>">
+        Venta de Casas y Departamentos Exclusivos de Lujo
+        </div>
     </header>
