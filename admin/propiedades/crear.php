@@ -1,9 +1,12 @@
 <?php 
 
     // Base de Datos 
-
     require '../../includes/config/database.php';
     $db = conectarDB();
+
+    // Consultamos los vendedores
+    $consulta = "SELECT * FROM vendedores";
+    $resultado = mysqli_query($db, $consulta);
 
     // Arreglo por mensajes de errores
     $errores = [];
@@ -30,6 +33,7 @@
         $wc = $_POST['wc'];
         $estacionamiento = $_POST['estacionamiento'];
         $vendedorId = $_POST['vendedorId'];
+        $creado = date('Y/m/d');
 
         if(!$titulo) {
             $errores[] = "Debes agregar el titulo";
@@ -67,15 +71,18 @@
         if(empty($errores)) {
             // Insertar en la Base de datos
     
-            $query = " INSERT INTO propiedades (titulo, precio, descripcion, habitaciones, wc, estacionamiento, vendedorId) VALUES ('$titulo', '$precio', '$descripcion', '$habitaciones', '$wc', '$estacionamiento', '$vendedorId')";
+            $query = " INSERT INTO propiedades (titulo, precio, descripcion, habitaciones, wc, estacionamiento, creado, vendedorId) VALUES ('$titulo', '$precio', '$descripcion', '$habitaciones', '$wc', '$estacionamiento', '$creado', '$vendedorId')";
     
             //echo $query;
     
             $resultado = mysqli_query($db, $query);
     
             if($resultado) {
-                echo 'Resultado ingresado correctamente';
-            } 
+                // Redireccionar al usuario. En esta caso a la pagina donde tenemos el boton para crear nuevas propiedades.
+                // Hay que redireccionar antes de escribir algo de HTML, luego no se puede
+
+                header('Location: /admin'); // Redireccionamos para que el usuario no meta datos duplicados.
+            }
         }
     }
 
@@ -167,8 +174,9 @@
 
                 <select name="vendedorId">
                     <option value="">-- Seleccione --</option>
-                    <option value="1">Leandro</option>
-                    <option value="2">Juan</option>
+                    <?php while($row = mysqli_fetch_assoc($resultado)): ?>
+                        <option <?php echo $vendedorId === $row['id'] ? 'selected' : ''; ?> value="<?php echo $row['id'] ?>"> <?php echo $row['nombre'] . " " . $row['apellido'] ?></option>
+                    <?php endwhile; ?>
                 </select>
             </fieldset>
 
