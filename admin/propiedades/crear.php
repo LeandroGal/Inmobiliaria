@@ -8,6 +8,15 @@
     // Arreglo por mensajes de errores
     $errores = [];
 
+    // Creo las variables para que en caso de que no complete todos los campos y toque el boton de "Crear Propiedad", queden guardados los campos que escribio para que no los vuelve a escribir.
+    $titulo = '';
+    $precio = '';
+    $descripcion = '';
+    $habitaciones = '';
+    $wc = '';
+    $estacionamiento = '';
+    $vendedorId = '';
+
     // Ejectuar el codigo despues de que el usuario envio el formulario
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
         // echo "<pre>";
@@ -90,36 +99,74 @@
                 <legend>Informacion General</legend>
 
                 <label for="titulo">Titulo:</label>
-                <input type="text" id="titulo" name="titulo" placeholder="Titulo propiedad">
+                <input 
+                    type="text" 
+                    id="titulo" 
+                    name="titulo" 
+                    placeholder="Titulo propiedad" 
+                    value="<?php echo $titulo; ?>">
 
                 <label for="precio">Precio:</label>
-                <input type="number" id="precio" name="precio" placeholder="Precio propiedad">
+                <input 
+                    type="number" 
+                    id="precio" 
+                    name="precio" 
+                    placeholder="Precio propiedad" 
+                    value="<?php echo $precio; ?>">
 
                 <label for="imagen">Imagen:</label>
-                <input type="file" id="imagen" accept="image/jpeg, image/png">
+                <input 
+                    type="file" 
+                    id="imagen" 
+                    accept="image/jpeg, image/png">
 
                 <label for="descripcion">descripcion:</label>
-                <textarea id="descripcion" name="descripcion"></textarea>
+                <textarea 
+                    id="descripcion" 
+                    name="descripcion" 
+                    value="<?php echo $descripcion; ?>">
+                </textarea>
             </fieldset>
 
             <fieldset>
                 <legend>Informacion Propiedad</legend>
 
                 <label for="habitaciones">Habitaciones:</label>
-                <input type="number" id="habitaciones" name="habitaciones" placeholder="Ej: 3" min="1" max="9">
+                <input 
+                    type="number" 
+                    id="habitaciones" 
+                    name="habitaciones" 
+                    placeholder="Ej: 3" 
+                    min="1" 
+                    max="9" 
+                    value="<?php echo $habitaciones; ?>">
 
                 <label for="wc">Baños:</label>
-                <input type="number" name="wc" id="wc" placeholder="Ej: 3" min="1" max="9">
+                <input 
+                    type="number" 
+                    name="wc" 
+                    id="wc" 
+                    placeholder="Ej: 3" 
+                    min="1" 
+                    max="9" 
+                    value="<?php echo $wc; ?>">
 
                 <label for="estacionamiento">Estacionamiento:</label>
-                <input type="number" id="estacionamiento" name="estacionamiento" placeholder="Ej: 1" min="1" max="5">
+                <input 
+                    type="number" 
+                    id="estacionamiento" 
+                    name="estacionamiento" 
+                    placeholder="Ej: 1" 
+                    min="1" 
+                    max="5" 
+                    value="<?php echo $estacionamiento; ?>">
             </fieldset>
 
             <fieldset>
                 <legend>Vendedor</legend>
 
                 <select name="vendedorId">
-                    <option value="" disabled>-- Seleccione --</option>
+                    <option value="">-- Seleccione --</option>
                     <option value="1">Leandro</option>
                     <option value="2">Juan</option>
                 </select>
