@@ -5,19 +5,69 @@
     require '../../includes/config/database.php';
     $db = conectarDB();
 
+    // Arreglo por mensajes de errores
+    $errores = [];
+
+    // Ejectuar el codigo despues de que el usuario envio el formulario
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
-        echo "<pre>";
-        var_dump($_POST);
-        echo "</pre>";
+        // echo "<pre>";
+        // var_dump($_POST);
+        // echo "</pre>";
 
         $titulo = $_POST['titulo'];
         $precio = $_POST['precio'];
-        $imagen = $_POST['imagen'];
         $descripcion = $_POST['descripcion'];
         $habitaciones = $_POST['habitaciones'];
         $wc = $_POST['wc'];
         $estacionamiento = $_POST['estacionamiento'];
         $vendedorId = $_POST['vendedorId'];
+
+        if(!$titulo) {
+            $errores[] = "Debes agregar el titulo";
+        }
+
+        if(!$precio) {
+            $errores[] = "Debes agregar el precio";
+        }
+        
+        if(strlen($descripcion) < 50) {
+            $errores[] = "Debes agregar una descripcion mayor a 50 caracteres";
+        }
+        
+        if(!$habitaciones) {
+            $errores[] = "Debes agregar el numero de habitaciones";
+        }
+
+        if(!$wc) {
+            $errores[] = "Debes agregar el numero de baños";
+        }
+
+        if(!$estacionamiento) {
+            $errores[] = "Debes agregar el numero de estacionamientos";
+        }
+
+        if(!$vendedorId) {
+            $errores[] = "Debes agregar el vendedor";
+        }
+        // echo "<pre>";
+        // var_dump($errores);
+        // echo "</pre>";
+
+        // Revisar que el arreglo de errores este vacio
+
+        if(empty($errores)) {
+            // Insertar en la Base de datos
+    
+            $query = " INSERT INTO propiedades (titulo, precio, descripcion, habitaciones, wc, estacionamiento, vendedorId) VALUES ('$titulo', '$precio', '$descripcion', '$habitaciones', '$wc', '$estacionamiento', '$vendedorId')";
+    
+            //echo $query;
+    
+            $resultado = mysqli_query($db, $query);
+    
+            if($resultado) {
+                echo 'Resultado ingresado correctamente';
+            } 
+        }
     }
 
 
@@ -28,6 +78,12 @@
         <h1>Crear</h1>
 
         <a href="/admin/index.php" class="boton boton-verde">Volver</a>
+
+        <?php foreach($errores as $error): ?>
+           <div class="alerta error">
+                <?php echo $error; ?>
+           </div>
+        <?php endforeach; ?>
 
         <form class="formulario" method="POST" action="/admin/propiedades/crear.php">
             <fieldset>
@@ -40,7 +96,7 @@
                 <input type="number" id="precio" name="precio" placeholder="Precio propiedad">
 
                 <label for="imagen">Imagen:</label>
-                <input type="file" id="imagen" name="imagen" accept="image/jpeg, image/png">
+                <input type="file" id="imagen" accept="image/jpeg, image/png">
 
                 <label for="descripcion">descripcion:</label>
                 <textarea id="descripcion" name="descripcion"></textarea>
@@ -63,6 +119,7 @@
                 <legend>Vendedor</legend>
 
                 <select name="vendedorId">
+                    <option value="" disabled>-- Seleccione --</option>
                     <option value="1">Leandro</option>
                     <option value="2">Juan</option>
                 </select>
