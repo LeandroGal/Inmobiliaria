@@ -26,14 +26,24 @@
         // var_dump($_POST);
         // echo "</pre>";
 
-        $titulo = $_POST['titulo'];
-        $precio = $_POST['precio'];
-        $descripcion = $_POST['descripcion'];
-        $habitaciones = $_POST['habitaciones'];
-        $wc = $_POST['wc'];
-        $estacionamiento = $_POST['estacionamiento'];
-        $vendedorId = $_POST['vendedorId'];
+        // echo "<pre>";
+        // var_dump($_FILES); // $_FILES es para subir archivos multimedia.
+        // echo "</pre>";
+
+
+        $titulo = mysqli_real_escape_string( $db, $_POST['titulo']); // En caso de que alguien inyecte SQL o algun script no lo toma en cuenta.
+        $precio = mysqli_real_escape_string( $db, $_POST['precio']);
+        $descripcion = mysqli_real_escape_string( $db, $_POST['descripcion']);
+        $habitaciones = mysqli_real_escape_string( $db, $_POST['habitaciones']);
+        $wc = mysqli_real_escape_string( $db, $_POST['wc']);
+        $estacionamiento = mysqli_real_escape_string( $db, $_POST['estacionamiento']);
+        $vendedorId = mysqli_real_escape_string( $db, $_POST['vendedorId']);
         $creado = date('Y/m/d');
+
+        // Asignar files a una variable
+
+        $imagen = $_FILES['imagen'];
+
 
         if(!$titulo) {
             $errores[] = "Debes agregar el titulo";
@@ -41,6 +51,17 @@
 
         if(!$precio) {
             $errores[] = "Debes agregar el precio";
+        }
+
+        if(!$imagen['name'] || $imagen['error']){
+            $errores[] = "La imagen es obligatoria";
+        }
+
+        // Validar por tamaño
+        $medida = 1000 * 100; // 100Kb
+
+        if($imagen['size'] > $medida) {
+            $errores[] = "La imagen es muy pesada";
         }
         
         if(strlen($descripcion) < 50) {
@@ -62,6 +83,7 @@
         if(!$vendedorId) {
             $errores[] = "Debes agregar el vendedor";
         }
+
         // echo "<pre>";
         // var_dump($errores);
         // echo "</pre>";
@@ -101,7 +123,7 @@
            </div>
         <?php endforeach; ?>
 
-        <form class="formulario" method="POST" action="/admin/propiedades/crear.php">
+        <form class="formulario" method="POST" action="/admin/propiedades/crear.php" enctype="multipart/form-data">
             <fieldset>
                 <legend>Informacion General</legend>
 
@@ -125,14 +147,11 @@
                 <input 
                     type="file" 
                     id="imagen" 
-                    accept="image/jpeg, image/png">
+                    accept="image/jpeg, image/png"
+                    name="imagen">
 
-                <label for="descripcion">descripcion:</label>
-                <textarea 
-                    id="descripcion" 
-                    name="descripcion" 
-                    value="<?php echo $descripcion; ?>">
-                </textarea>
+                <label for="descripcion">Descripcion:</label>
+                <textarea id="descripcion" name="descripcion" value="<?php echo $descripcion; ?>"></textarea>
             </fieldset>
 
             <fieldset>
