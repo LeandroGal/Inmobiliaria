@@ -58,7 +58,7 @@
         }
 
         // Validar por tamaño
-        $medida = 1000 * 100; // 100Kb
+        $medida = 1000 * 1000; // 1Mb
 
         if($imagen['size'] > $medida) {
             $errores[] = "La imagen es muy pesada";
@@ -91,9 +91,25 @@
         // Revisar que el arreglo de errores este vacio
 
         if(empty($errores)) {
+
+            /** Subida de archivos **/
+             
+            // Crear Carpeta
+            $carpetaImagenes = '../../imagenes/'; // Crea una carpeta de imagenes en la raiz del proyecto, para subirlas a la base de datos
+
+            if(!is_dir($carpetaImagenes)){ // is_dir verifica si existe una carpeta
+                mkdir($carpetaImagenes); // mkdir es para crear un directorio. Cuando no hay errores crea la carpeta
+            }
+
+            // Generar un nombre unico
+            $nombreImagen = md5( uniqid( rand(), true )) . ".jpg"; // md5 se usa para crear un hash. uniqid se usa para que cada hash sea diferente. rand te genera un numero aleatorio
+
+            // Subir la imagen
+            move_uploaded_file($imagen['tmp_name'], $carpetaImagenes . $nombreImagen);
+
+
             // Insertar en la Base de datos
-    
-            $query = " INSERT INTO propiedades (titulo, precio, descripcion, habitaciones, wc, estacionamiento, creado, vendedorId) VALUES ('$titulo', '$precio', '$descripcion', '$habitaciones', '$wc', '$estacionamiento', '$creado', '$vendedorId')";
+            $query = " INSERT INTO propiedades (titulo, precio, imagen, descripcion, habitaciones, wc, estacionamiento, creado, vendedorId) VALUES ('$titulo', '$precio', '$nombreImagen', '$descripcion', '$habitaciones', '$wc', '$estacionamiento', '$creado', '$vendedorId')";
     
             //echo $query;
     
